@@ -1,4 +1,5 @@
 import pytest
+import collections
 import numpy as np
 import m2.datasets as d
 import m2.povel1985 as pe
@@ -95,5 +96,19 @@ def test_best_hypothesis():
     for ex, (ex_best_clock, ex_cv) in zip(povel1985['examples'],
                                           povel1985['best_clocks']):
         best_clock, cv = pe.best_clock(ex, 1, 16)
+        print ex, (best_clock, ex_best_clock), (cv, ex_cv)
         assert cv == ex_cv
         assert best_clock == ex_best_clock
+
+
+def test_best_hypothesis_fitch():
+    Case = collections.namedtuple('Case', ['idx', 'best_clock', 'onsets'])
+    cases = [
+        Case(0, ((0, 4), 8), [0, 6, 8, 14]),
+        Case(1, ((0, 4), 1), [0, 4, 8, 12, 14]),
+        Case(2, ((0, 4), 5), [0, 2, 4, 12, 14])
+    ]
+    for case in cases:
+        print case
+        assert case.best_clock == pe.best_clock(np.array(case.onsets),
+                                                1, 16)

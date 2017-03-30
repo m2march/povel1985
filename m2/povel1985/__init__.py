@@ -61,7 +61,7 @@ def accented_onsets(onsets):
     return accented
 
 
-def hypothesis_counterevidence(onsets, hypothesis, W=4):
+def hypothesis_counterevidence(onsets, hypothesis, phrase_length, W=4):
     '''
     Calculates the counter evidence score in Povel 1985.
 
@@ -69,6 +69,7 @@ def hypothesis_counterevidence(onsets, hypothesis, W=4):
         onsets: list of time onsets
         hypothesis: (phase, period) tuple. Period and onset times should be
             multples of a same base time step
+        phrase_length: length of a phrase in onsets in base time step units
         W: weight of -ev counterevidence (see paper)
 
     Returns:
@@ -77,13 +78,15 @@ def hypothesis_counterevidence(onsets, hypothesis, W=4):
     accents = accented_onsets(onsets)
     counterevidence = 0
     projection = hypothesis[0]
-    while projection < onsets[-1] + hypothesis[1]:
+    total_length = np.ceil(onsets[-1] / float(phrase_length)) * phrase_length
+    while projection < total_length:
         if projection not in accents:
             if projection not in onsets:
                 counterevidence += W
             else:
                 counterevidence += 1
         projection += hypothesis[1]
+    print '>>', onsets, hypothesis, phrase_length, accents, counterevidence
     return counterevidence
 
 
@@ -108,7 +111,8 @@ def best_clock(onsets, base_time_step, phrase_length):
         if phrase_length % period == 0
     ]
     hypothesis_space_w_score = [(hypothesis,
-                                 hypothesis_counterevidence(onsets, hypothesis))
+                                 hypothesis_counterevidence(onsets, hypothesis,
+                                                            phrase_length))
                                 for hypothesis in hypothesis_space]
     sorted_hs = sorted(hypothesis_space_w_score, key=lambda x: x[1])
     return sorted_hs[0]
