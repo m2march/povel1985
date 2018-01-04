@@ -10,11 +10,12 @@ def cluster_onsets(onsets):
         onsets: list of ms
 
     Returns:
-        List of ints where each int represents how many onsets should be in that
-        cluster.
-        The sum of the return value should be equal to the length of the
-        'onsets' list.
+        List of ints where each int represents how many onsets should be in
+        that cluster.  The sum of the return value should be equal to the
+        length of the 'onsets' list.
     '''
+    if len(onsets) <= 2:
+        return [len(onsets)]
 
     max_clustering_dur = 450  # ms
 
@@ -32,7 +33,7 @@ def cluster_onsets(onsets):
         else:
             clusters.append(1)
 
-    if next_dur < median_ioi and max_clustering_dur:
+    if next_dur < median_ioi and next_dur < max_clustering_dur:
         clusters[-1] += 1
     else:
         clusters.append(1)
