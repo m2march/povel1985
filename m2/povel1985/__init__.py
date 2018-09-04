@@ -87,7 +87,7 @@ def hypothesis_counterevidence(onsets, hypothesis, phrase_length, W=4):
             else:
                 counterevidence += 1
         projection += hypothesis[1]
-    print '>>', onsets, hypothesis, phrase_length, accents, counterevidence
+    print('>>', onsets, hypothesis, phrase_length, accents, counterevidence)
     return counterevidence
 
 
