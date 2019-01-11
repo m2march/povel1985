@@ -21,9 +21,9 @@ def cluster_onsets(onsets):
 
     iois = np.diff(onsets)
     iois_set = list(set(iois))
-    median_ioi = sorted(iois_set)[len(iois_set) / 2]
+    median_ioi = sorted(iois_set)[len(iois_set) // 2]
     clusters = [1]
-    for idx in xrange(1, len(onsets) - 1):
+    for idx in range(1, len(onsets) - 1):
         prev_dur = iois[idx - 1]
         next_dur = iois[idx]
         min_dur = min(prev_dur, next_dur)
@@ -48,17 +48,17 @@ def accented_onsets(onsets):
     it = iter(onsets)
     for cluster in clusters:
         if cluster == 1:
-            accented.append(it.next())
+            accented.append(next(it))
         elif cluster == 2:
-            it.next()
-            accented.append(it.next())
+            next(it)
+            accented.append(next(it))
         else:
-            accented.append(it.next())
+            accented.append(next(it))
             cluster -= 2
             while cluster != 0:
-                it.next()
+                next(it)
                 cluster -= 1
-            accented.append(it.next())
+            accented.append(next(it))
     return accented
 
 
@@ -69,7 +69,7 @@ def hypothesis_counterevidence(onsets, hypothesis, phrase_length, W=4):
     Args:
         onsets: list of time onsets
         hypothesis: (phase, period) tuple. Period and onset times should be
-            multples of a same base time step
+            multiples of a same base time step
         phrase_length: length of a phrase in onsets in base time step units
         W: weight of -ev counterevidence (see paper)
 
@@ -87,7 +87,6 @@ def hypothesis_counterevidence(onsets, hypothesis, phrase_length, W=4):
             else:
                 counterevidence += 1
         projection += hypothesis[1]
-    print('>>', onsets, hypothesis, phrase_length, accents, counterevidence)
     return counterevidence
 
 
