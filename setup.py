@@ -5,6 +5,5 @@ setup(
     description='Library package Povel 1985 clock induction model',
     packages=find_packages(),
     namespace_packages=['m2'],
-    install_requires=[],
-    dependency_links=['file://../tht']
+    install_requires=['numpy'],
 )
